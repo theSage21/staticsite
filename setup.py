@@ -1,6 +1,6 @@
 from setuptools import setup
 
-__version__ = "2020.1.9"
+__version__ = "2020.1.10"
 
 with open("README.md", "r") as fl:
     long_desc = fl.read()
@@ -15,6 +15,9 @@ setup(
     packages=["staticsite"],
     install_requires=["jinja2", "htmlmin"],
     python_requires=">=3.6",
-    project_urls={"Source": "https://github.com/thesage21/staticsite"},
+    project_urls={
+        "Source": "https://github.com/thesage21/staticsite",
+        "Documentation": "https://thesage21.github.io/staticsite/",
+    },
     zip_safe=True,
 )
