@@ -1,0 +1,41 @@
+{% extends '.base.html' %}
+{% block head %}
+<style>code{background-color: #ccc; padding: 3px;}</style>
+{% endblock %}
+{% block content %}
+<h1>StaticSite</h1>
+<p>
+An stupidly simple static site builder using <a href='https://jinja.palletsprojects.com/en/2.10.x/' target='_blank'>Jinja2</a>. This current documentation is built using staticsite itself.
+</p>
+<p>
+Refer to the code or open an issue if something is unclear.
+</p>
+
+<ol>
+  <li>Create a <b>src</b> directory.</li>
+  <li>Create your source files in that directory.</li>
+  <li>Run <code>python -m staticsite build</code> to build your site into the <b>docs</b> directory.</li>
+  <li>Serve your site with <code>cd docs && python -m http.server</code> at <a href='http://localhost:8000'>http://localhost:8000</a></li>
+</ol>
+
+<h2>Folder structures</h2>
+
+<p><b>Note:</b>Files with a leading <code>.</code> are not rendered into the final site.</p>
+<p><b>Note:</b>A <code>.sitehash.txt</code> file is added to the final results denoting a hash for the build.</p>
+
+<pre>
+.
+├── src
+│   ├── .autoreload.html
+│   ├── .base.html
+│   ├── css
+│   │   └── .base.css
+│   ├── .examples.html
+│   └── index.html
+│
+└── docs
+    ├── index.html
+    └── .sitehash.txt
+</pre>
+{% include '.examples.html' %}
+{% endblock %}

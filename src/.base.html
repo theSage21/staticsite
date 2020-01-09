@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang='en'>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StaticSite</title>
+    <style>{% include 'css/.base.css' %}</style>
+    {% block head %}
+    {% endblock %}
+  </head>
+
+<body>
+  <div class="topnav">
+    <a href="/">StaticSite</a>
+    <a href="/archives.html">Github</a>
+  </div>
+  <div class='content'>
+  {% block content %}{% endblock %}
+  </div>
+  {% include '.autoreload.html' %}
+</body>
+</html>
