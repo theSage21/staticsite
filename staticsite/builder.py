@@ -14,7 +14,8 @@ def build(
     *,
     endswith_whitelist=("html", "css", "js"),
     sitehash_path=".sitehash.txt",
-    variables=None
+    variables=None,
+    config=None
 ):
     """
     Build "files" from "src" to "target".
@@ -29,6 +30,8 @@ def build(
     env.globals["site_hash_path"] = sitehash_path
     if variables is not None:
         env.globals.update(variables)
+    if config is not None:
+        env.globals.update(config)
     for template_path in get_files(src, src):
         target_path = os.path.join(target, template_path)
         target_dirname = os.path.dirname(target_path)

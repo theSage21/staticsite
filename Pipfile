@@ -12,6 +12,7 @@ twine = "*"
 [packages]
 jinja2 = "*"
 htmlmin = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.6"

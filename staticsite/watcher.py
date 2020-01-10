@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 from hashlib import md5
@@ -31,7 +32,7 @@ def watch(src, trigger_fn, *, interval=0.3):
                     sitehash=new_hsh, autoreload=True, check_interval=interval * 1000
                 )
             last_hsh = new_hsh
-        except Exception:
-            pass
+        except Exception as e:
+            logging.exception(e)
         finally:
             time.sleep(interval)
