@@ -45,7 +45,7 @@ def build(
                 fl.write(html)
         else:
             shutil.copy(os.path.join(src, template_path), target_path)
-        if variables.get("sitehash") is not None:
+        if variables is not None and variables.get("sitehash") is not None:
             path = os.path.join(target, sitehash_path)
             with open(path, "w") as fl:
                 fl.write(variables["sitehash"])
