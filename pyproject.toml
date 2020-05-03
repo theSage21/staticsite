@@ -1,0 +1,22 @@
+
+[tool.poetry]
+name = "staticsite"
+version = "0.1.0"
+description = "Super simple Jinja2 based staticsite generator."
+authors = ["arjoonn sharma <arjoonn.94@gmail.com>"]
+readme = "README.md"
+homepage= "https://thesage21.github.io/staticsite/"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+htmlmin = "^0.1.12"
+Jinja2 = "^2.11.2"
+pyyaml = "^5.3.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+black = "^19.10b0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
