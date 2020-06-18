@@ -6,3 +6,5 @@ Super simple static site builder.
 2. Put your files there.
 3. `python -m staticsite`
 4. Find your built site in `docs` (or specify `--target` on CLI)
+
+[Documentation](https://thesage21.github.io/staticsite/)
