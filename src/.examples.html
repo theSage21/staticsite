@@ -5,3 +5,13 @@
 
 <p>You can then use <code>{<span></span>% include '.autoreload.html' %}</code> in your site's base tempate, which will reload your site in the browser when the source files change.</p>
 <p>If you build your site using <code>pyton -m staticsite build</code> then the auto reload part is not included, leaving you with a static site.</p>
+
+<h2>Adding custom processors</h2>
+You can add custom processors by adding them as key, value pairs in your staticsite yml file.
+
+For example the example file contains pretty_json. which renders like:
+
+{% set obj = {'a': {'b': {'c': {'d': 10}}}} %}
+<pre>
+{{ plugins.pretty_json(obj) }}
+</pre>

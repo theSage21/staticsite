@@ -1,4 +1,5 @@
 import argparse
+import importlib
 
 import yaml
 
@@ -32,6 +33,13 @@ parser.add_argument(
 args = parser.parse_args()
 with open(args.config, "r") as fl:
     config = yaml.load(fl, Loader=yaml.FullLoader)
+    if "plugins" in config:
+        plugs = {}
+        for key, value in config["plugins"].items():
+            *mod, fn = value.split(".")
+            plugs[key] = getattr(importlib.import_module(".".join(mod)), fn)
+        config["plugins"] = plugs
+
 if args.cmd == "build":
     build(src=args.src, target=args.target, config=config)
 elif args.cmd == "watch":
