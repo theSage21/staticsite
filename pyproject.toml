@@ -9,9 +9,9 @@ homepage= "https://thesage21.github.io/staticsite/"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-htmlmin = "^0.1.12"
 Jinja2 = "^2.11.2"
 pyyaml = "^5.3.1"
+Flask-Minify = "^0.23"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

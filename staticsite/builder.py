@@ -1,10 +1,18 @@
 import os
 import shutil
 
-import htmlmin
+from flask_minify import decorators
 from jinja2 import Environment, FileSystemLoader, Template
 
 from .discovery import get_files
+
+
+def minify(html):
+    @decorators.minify(html=True, js=True, cssless=True)
+    def fn():
+        return html
+
+    return fn()
 
 
 def build(
@@ -40,7 +48,7 @@ def build(
         if any(template_path.endswith(ext) for ext in endswith_whitelist):
             template = env.get_template(template_path)
             html = template.render()
-            html = htmlmin.minify(html)
+            html = minify(html)
             with open(target_path, "w") as fl:
                 fl.write(html)
         else:
