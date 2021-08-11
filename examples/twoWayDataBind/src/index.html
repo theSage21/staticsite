@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang='en'>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Two way data binding</title>
+  </head>
+<body>
+  <h1>Two way data binding</h1>
+  <p>
+  If we add two numbers X
+  <input data-value='x' />
+  and Y <input data-value='y' />
+  the result is <span data-text='total'></span> and the square of that is <span data-text='square'></span>.
+  </p>
+  <script>
+  {% include 'bind.js' %}
+  st = bindToDom({
+      x: 10,
+      y: 2,
+      total: function(data){
+        return Number(data.x) + Number(data.y)
+      },
+      square: function(data){
+        return Number(data.total) * Number(data.total)
+      }
+    })
+  </script>
+</body>
+</html>
