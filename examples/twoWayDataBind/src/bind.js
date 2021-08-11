@@ -1,3 +1,5 @@
+// See bind.js in src for an updated version
+// This is a basic example
 function getDomUpdateFn(varName){
   return function (value){
     const domElements = document.querySelectorAll(`[data-value='${varName}']`)
@@ -46,13 +48,11 @@ function bindToDom(obj){
       // set value in store
       access[varName].set(obj[varName])
       // When DOM changes, update var by adding event listeners
-      const domElements = document.querySelectorAll(`[data-value=${varName}]`)
-      for(var j=0; j < domElements.length; ++j){
-        const el = domElements[j]
-        el.addEventListener('change', function (){
-          obj[varName] = el.value
-        })
-      }
+      document.addEventListener('change', function(e){
+        if(e.target && e.target.getAttribute('data-value') === varName){
+          obj[varName] = e.target.value
+        }
+      })
     }  // when key is not function 
   }  // loop
   obj = Object.defineProperties(obj, access);
