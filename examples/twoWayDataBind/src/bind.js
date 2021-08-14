@@ -1,5 +1,3 @@
-// See bind.js in src for an updated version
-// This is a basic example
 function getDomUpdateFn(varName){
   return function (value){
     const domElements = document.querySelectorAll(`[data-value='${varName}']`)
