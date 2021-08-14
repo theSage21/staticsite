@@ -48,7 +48,8 @@ def build(
         if any(template_path.endswith(ext) for ext in endswith_whitelist):
             template = env.get_template(template_path)
             html = template.render()
-            html = minify(html)
+            if config is not None and config.get("minify") is True:
+                html = minify(html)
             with open(target_path, "w") as fl:
                 fl.write(html)
         else:
