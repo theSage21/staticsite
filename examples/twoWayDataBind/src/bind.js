@@ -8,6 +8,11 @@ function getDomUpdateFn(varName){
     for(j=0; j < spanElements.length; ++j){
       spanElements[j].innerHTML = value
     }
+    const propElements = document.querySelectorAll(`[data-bind$='${varName}']`)
+    for(j=0; j < propElements.length; ++j){
+      let [key, vname] = propElements[j].getAttribute('data-bind').split(':')
+      propElements[j].setAttribute(key, value)
+    }
   }
 }
 
