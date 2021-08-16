@@ -31,14 +31,18 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
-with open(args.config, "r") as fl:
-    config = yaml.load(fl, Loader=yaml.FullLoader)
-    if "plugins" in config:
-        plugs = {}
-        for key, value in config["plugins"].items():
-            *mod, fn = value.split(".")
-            plugs[key] = getattr(importlib.import_module(".".join(mod)), fn)
-        config["plugins"] = plugs
+try:
+    with open(args.config, "r") as fl:
+        config = yaml.load(fl, Loader=yaml.FullLoader)
+        config["plugins"] = {}
+        if "plugins" in config:
+            plugs = {}
+            for key, value in config["plugins"].items():
+                *mod, fn = value.split(".")
+                plugs[key] = getattr(importlib.import_module(".".join(mod)), fn)
+            config["plugins"] = plugs
+except FileNotFoundError:
+    config = {"plugins": {}}
 
 if args.cmd == "build":
     build(src=args.src, target=args.target, config=config)
