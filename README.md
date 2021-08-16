@@ -1,6 +1,7 @@
 # StaticSite
 
-[Documentation](https://thesage21.github.io/staticsite/)
+- [Documentation](https://thesage21.github.io/staticsite/)
+- See examples folder for ways to do common things.
 
 Super simple static site builder.
 
