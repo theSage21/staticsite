@@ -25,24 +25,36 @@ parser.add_argument(
 )
 parser.add_argument(
     "--config",
-    default="staticsite.yaml",
+    default=None,
     help="The variables in this file are made available to the templates."
     " You can use this to set things like the base url for your site.",
 )
 
 args = parser.parse_args()
-try:
-    with open(args.config, "r") as fl:
-        config = yaml.load(fl, Loader=yaml.FullLoader)
-        config["plugins"] = {}
-        if "plugins" in config:
-            plugs = {}
-            for key, value in config["plugins"].items():
-                *mod, fn = value.split(".")
-                plugs[key] = getattr(importlib.import_module(".".join(mod)), fn)
-            config["plugins"] = plugs
-except FileNotFoundError:
-    config = {"plugins": {}}
+
+
+def get_config(fl):
+    config = yaml.load(fl, Loader=yaml.FullLoader)
+    plugs = {}
+    if "plugins" in config:
+        for key, value in config["plugins"].items():
+            *mod, fn = value.split(".")
+            plugs[key] = getattr(importlib.import_module(".".join(mod)), fn)
+    config["plugins"] = plugs
+    return config
+
+
+for path in [args.config, "staticsite.yaml", "staticsite.yml"]:
+    if path is None:
+        continue
+    try:
+        with open(path, "r") as fl:
+            config = get_config(fl)
+        break
+    except FileNotFoundError as e:
+        raise e
+        config = {"plugins": {}}
+
 
 if args.cmd == "build":
     build(src=args.src, target=args.target, config=config)
