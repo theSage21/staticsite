@@ -1,5 +1,7 @@
 # StaticSite
 
+[Documentation](https://thesage21.github.io/staticsite/)
+
 Super simple static site builder.
 
 1. Create a folder called `src`.
@@ -42,5 +44,3 @@ tree
 # └── docs
 #     ├── index.html
 ```
-
-[Documentation](https://thesage21.github.io/staticsite/)
