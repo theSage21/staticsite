@@ -71,19 +71,12 @@ Refer to the code or open an issue if something is unclear.
   <li>Serve your site with <code>cd docs && python -m http.server</code> at <a href='http://localhost:8000'>http://localhost:8000</a></li>
 </ol>
 
-<h2>Two way data binding</h2>
+<h2>Usage</h2>
 
-<p>
-If we add two numbers X
-<input data-value='x' />
-and Y <input data-value='y' />
-the result is <span data-text='total'></span> and the square of that is <span data-text='square'></span>.
-</p>
-
-<p>You can use minimal two way data binding along with flat computed dependencies as well! Makes code a lot easier to write.</p>
-
-<h2>Folder structures</h2>
-
+<pre><code>$ mkdir src
+$ vim src/.base.html
+$ vim src/index.html
+$ python -m staticsite build --target docs</code></pre>
 <p><b>Note:</b>Files with a leading <code>.</code> are not rendered into the final site.</p>
 <p><b>Note:</b>A <code>.sitehash.txt</code> file is added to the final results denoting a hash for the build.</p>
 
@@ -101,7 +94,11 @@ the result is <span data-text='total'></span> and the square of that is <span da
     ├── index.html
     └── .sitehash.txt
 </pre>
-<h2>Developing the site</h2>
+<h2>Examples</h2>
+<p>See <a href='https://github.com/theSage21/staticsite/tree/master/examples'>examples folder</a> for code regarding these examples and more.</p>
+
+<h3>Developing the site</h3>
+
 <p>
 <code>python -m staticsite watch</code> keeps re-rendering your site as soon as it detects changes.
 </p>
@@ -109,7 +106,7 @@ the result is <span data-text='total'></span> and the square of that is <span da
 <p>You can then use <code>{<span></span>% include '.autoreload.html' %}</code> in your site's base tempate, which will reload your site in the browser when the source files change.</p>
 <p>If you build your site using <code>pyton -m staticsite build</code> then the auto reload part is not included, leaving you with a static site.</p>
 
-<h2>Adding custom processors</h2>
+<h3>Adding custom processors</h3>
 You can add custom processors by adding them as key, value pairs in your staticsite yml file.
 
 For example the example file contains pretty_json. which renders like:
@@ -126,6 +123,18 @@ For example the example file contains pretty_json. which renders like:
   }
 }
 </pre>
+
+<h3>Two way data binding</h3>
+
+<p>
+If we add two numbers X
+<input data-value='x' />
+and Y <input data-value='y' />
+the result is <span data-text='total'></span> and the square of that is <span data-text='square'></span>.
+</p>
+
+<p>You can use minimal two way data binding along with flat computed dependencies as well! Makes code a lot easier to write.</p>
+
 <script src='https://cdn.jsdelivr.net/gh/thesage21/staticsite@v0.1.3/examples/twoWayDataBind/src/bind.js'></script>
 <script>
 st = bindToDom({
