@@ -20,7 +20,7 @@ def build(
     target,
     files=None,
     *,
-    endswith_whitelist=("html", "css", "js"),
+    endswith_whitelist=("html", "css", "js", "svg"),
     sitehash_path=".sitehash.txt",
     variables=None,
     config=None
