@@ -10,31 +10,40 @@
   <h1>Two way data binding</h1>
   <p>
   If we add two numbers X
-  <input data-value='x' />
-  and Y <input data-value='y' />
-  the result is <span data-text='total'></span> and the square of that is <span data-text='square'></span>.
+  <input data-tie='value:ex.x' />
+  and Y <input data-tie='value:ex.y' />
+  the result is <span data-tie='innerHTML:ex.total'></span> and the square of that is <span data-tie='innerHTML:ex.square'></span>.
   </p>
-  <p>You can even bind things to attributes of tags, like the placeholder of this input field<input data-bind='placeholder:equation'/>.</p>
+  <p>You can even bind things to attributes of tags, like the placeholder of this input field<input data-tie='placeholder:ex.equation'/>.</p>
+  <p data-tie='class:ex.visible'>Visibility of elements can also be controlled using computed values. To make this paragraph disappear change the values so that the total is 0.</p>
   <script>
-  function getDomUpdateFn(varName){
+  function getDomUpdateFn(varName, scope){
   return function (value){
-    const domElements = document.querySelectorAll(`[data-value='${varName}']`)
+    const domElements = document.querySelectorAll(`[data-tie*='${scope}.${varName}']`)
+    console.log(domElements, varName, scope)
     for(var j=0; j < domElements.length; ++j){
-      domElements[j].value =  value
-    }
-    const spanElements = document.querySelectorAll(`[data-text='${varName}']`)
-    for(j=0; j < spanElements.length; ++j){
-      spanElements[j].innerHTML = value
-    }
-    const propElements = document.querySelectorAll(`[data-bind$='${varName}']`)
-    for(j=0; j < propElements.length; ++j){
-      let [key, vname] = propElements[j].getAttribute('data-bind').split(':')
-      propElements[j].setAttribute(key, value)
+      const ties = (domElements[j].getAttribute('data-tie') || '').split(' ').filter(function (tie){
+        return tie != '' && tie.endsWith(`${scope}.${varName}`)
+      })
+      for(var i=0; i < ties.length; ++i){
+        let [prop, vname] = ties[i].split(':')
+        vname = vname.replace(scope+'.', '')
+        switch(prop){
+          case 'value':
+            domElements[j].value = value;
+            break;
+          case 'innerHTML':
+            domElements[j].innerHTML = value;
+            break;
+          default:
+            domElements[j].setAttribute(prop, value)
+        }
+      }
     }
   }
 }
 
-function bindToDom(obj){
+function bindToDom(scope, obj){
   const keys = Object.keys(obj)
   let access = {}  // add get/set methods here
   let store = {}  // actually store the information needed
@@ -53,7 +62,7 @@ function bindToDom(obj){
           return store[varName]
         },
         set: function (value){
-          getDomUpdateFn(varName)(value)
+          getDomUpdateFn(varName, scope)(value)
           store[varName] = value
           const toCall = listeners[varName]
           if(toCall !== undefined){
@@ -70,9 +79,10 @@ function bindToDom(obj){
       access[varName].set(obj[varName])
       // When DOM changes, update var by adding event listeners
       document.addEventListener('change', function(e){
-        if(e.target && e.target.getAttribute('data-value') === varName){
-          obj[varName] = e.target.value
-        }
+        if(
+          e.target
+          && (e.target.getAttribute('data-tie') || '').indexOf(`value:${scope}.${varName}`) !== -1
+        ) { obj[varName] = e.target.value }
       })
     }  // when key is not function 
   }  // loop
@@ -101,7 +111,7 @@ function bindToDom(obj){
           return store[varName] 
         },
         set: function (value){
-          getDomUpdateFn(varName)(value)
+          getDomUpdateFn(varName, scope)(value)
           store[varName] = value
           const toCall = listeners[varName]
           if(toCall !== undefined){
@@ -122,8 +132,8 @@ function bindToDom(obj){
   recordEvents = false
   return obj
 }
-  st = bindToDom({
-      x: 10,
+  ex = bindToDom('ex', {
+      x: 1,
       y: 2,
       total: function(data){
         return Number(data.x) + Number(data.y)
@@ -133,8 +143,13 @@ function bindToDom(obj){
       },
       equation: function(data){
         return `${data.x} + ${data.y} = ${data.total} ^2 = ${data.square}`
+      },
+      visible: function (data){
+        if(data.total === 0){ return 'd-none' }
+        return ''
       }
     })
   </script>
+  <style> .d-none{display: none;} </style>
 </body>
 </html>

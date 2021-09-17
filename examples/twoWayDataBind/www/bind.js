@@ -1,22 +1,30 @@
-function getDomUpdateFn(varName){
+function getDomUpdateFn(varName, scope){
   return function (value){
-    const domElements = document.querySelectorAll(`[data-value='${varName}']`)
+    const domElements = document.querySelectorAll(`[data-tie*='${scope}.${varName}']`)
+    console.log(domElements, varName, scope)
     for(var j=0; j < domElements.length; ++j){
-      domElements[j].value =  value
-    }
-    const spanElements = document.querySelectorAll(`[data-text='${varName}']`)
-    for(j=0; j < spanElements.length; ++j){
-      spanElements[j].innerHTML = value
-    }
-    const propElements = document.querySelectorAll(`[data-bind$='${varName}']`)
-    for(j=0; j < propElements.length; ++j){
-      let [key, vname] = propElements[j].getAttribute('data-bind').split(':')
-      propElements[j].setAttribute(key, value)
+      const ties = (domElements[j].getAttribute('data-tie') || '').split(' ').filter(function (tie){
+        return tie != '' && tie.endsWith(`${scope}.${varName}`)
+      })
+      for(var i=0; i < ties.length; ++i){
+        let [prop, vname] = ties[i].split(':')
+        vname = vname.replace(scope+'.', '')
+        switch(prop){
+          case 'value':
+            domElements[j].value = value;
+            break;
+          case 'innerHTML':
+            domElements[j].innerHTML = value;
+            break;
+          default:
+            domElements[j].setAttribute(prop, value)
+        }
+      }
     }
   }
 }
 
-function bindToDom(obj){
+function bindToDom(scope, obj){
   const keys = Object.keys(obj)
   let access = {}  // add get/set methods here
   let store = {}  // actually store the information needed
@@ -35,7 +43,7 @@ function bindToDom(obj){
           return store[varName]
         },
         set: function (value){
-          getDomUpdateFn(varName)(value)
+          getDomUpdateFn(varName, scope)(value)
           store[varName] = value
           const toCall = listeners[varName]
           if(toCall !== undefined){
@@ -52,9 +60,10 @@ function bindToDom(obj){
       access[varName].set(obj[varName])
       // When DOM changes, update var by adding event listeners
       document.addEventListener('change', function(e){
-        if(e.target && e.target.getAttribute('data-value') === varName){
-          obj[varName] = e.target.value
-        }
+        if(
+          e.target
+          && (e.target.getAttribute('data-tie') || '').indexOf(`value:${scope}.${varName}`) !== -1
+        ) { obj[varName] = e.target.value }
       })
     }  // when key is not function 
   }  // loop
@@ -83,7 +92,7 @@ function bindToDom(obj){
           return store[varName] 
         },
         set: function (value){
-          getDomUpdateFn(varName)(value)
+          getDomUpdateFn(varName, scope)(value)
           store[varName] = value
           const toCall = listeners[varName]
           if(toCall !== undefined){
