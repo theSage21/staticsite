@@ -44,18 +44,17 @@
 h1,h2,h3{line-height:1.2}</style>
     
 <style>code{background-color: #ccc; padding: 3px;}</style>
-<link rel='stylesheet' src='/staticsite/css/index.css'>
+<link rel='stylesheet' src='/css/index.css'>
 
   </head>
-
-<body>
-  <div class="topnav">
-    <a href="/staticsite">StaticSite</a>
-    <a href="https://github.com/theSage21/staticsite" target='_blank'>Github</a>
-    <a href='#' style='float: right; '></a>
-  </div>
-  <div class='content'>
-  
+  <body>
+    <div class="topnav">
+      <a href="/">StaticSite</a>
+      <a href="https://github.com/theSage21/staticsite" target='_blank'>Github</a>
+      <a href='#' style='float: right; '></a>
+    </div>
+    <div class='content'>
+    
 <h1>StaticSite</h1>
 <p>
 An stupidly simple static site builder using <a href='https://jinja.palletsprojects.com/en/2.10.x/' target='_blank'>Jinja2</a>. This current documentation is built using staticsite itself.
@@ -95,7 +94,7 @@ $ python -m staticsite build --target docs</code></pre>
     └── .sitehash.txt
 </pre>
 <h2>Examples</h2>
-<p>See <a href='https://github.com/theSage21/staticsite/tree/master/examples'>examples folder</a> for code regarding these examples and more.</p>
+<p>See <a href='/examples/index.html'>examples folder</a> for ways to do modern things with staticsite.</p>
 
 <h3>Developing the site</h3>
 
@@ -123,18 +122,6 @@ For example the example file contains pretty_json. which renders like:
   }
 }
 </pre>
-
-<h3>Two way data binding</h3>
-
-<p>
-If we add two numbers X
-<input data-value='x' />
-and Y <input data-value='y' />
-the result is <span data-text='total'></span> and the square of that is <span data-text='square'></span>.
-</p>
-
-<p>You can use minimal two way data binding along with flat computed dependencies as well! Makes code a lot easier to write.</p>
-
 <script src='https://cdn.jsdelivr.net/gh/thesage21/staticsite@v0.1.3/examples/twoWayDataBind/src/bind.js'></script>
 <script>
 st = bindToDom({
@@ -149,7 +136,7 @@ st = bindToDom({
   })
 </script>
 
-  </div>
-  
-</body>
+    </div>
+    
+  </body>
 </html>
