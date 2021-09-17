@@ -1,7 +1,7 @@
 
 [tool.poetry]
 name = "staticsite"
-version = "0.1.5"
+version = "0.1.6"
 description = "Super simple Jinja2 based staticsite generator."
 authors = ["arjoonn sharma <arjoonn.94@gmail.com>"]
 readme = "README.md"
