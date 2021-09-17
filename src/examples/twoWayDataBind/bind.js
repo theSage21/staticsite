@@ -1,7 +1,6 @@
 function getDomUpdateFn(varName, scope){
   return function (value){
     const domElements = document.querySelectorAll(`[data-tie*='${scope}.${varName}']`)
-    console.log(domElements, varName, scope)
     for(var j=0; j < domElements.length; ++j){
       const ties = (domElements[j].getAttribute('data-tie') || '')
         .split(' ')
