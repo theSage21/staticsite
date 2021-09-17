@@ -3,12 +3,14 @@ function getDomUpdateFn(varName, scope){
     const domElements = document.querySelectorAll(`[data-tie*='${scope}.${varName}']`)
     console.log(domElements, varName, scope)
     for(var j=0; j < domElements.length; ++j){
-      const ties = (domElements[j].getAttribute('data-tie') || '').split(' ').filter(function (tie){
-        return tie != '' && tie.endsWith(`${scope}.${varName}`)
-      })
+      const ties = (domElements[j].getAttribute('data-tie') || '')
+        .split(' ')
+        .filter(function (tie){
+          return tie != '' && tie.endsWith(`:${scope}.${varName}`)
+        })
       for(var i=0; i < ties.length; ++i){
         let [prop, vname] = ties[i].split(':')
-        vname = vname.replace(scope+'.', '')
+        vname = vname.slice(`${scope}:`.length)
         switch(prop){
           case 'value':
             domElements[j].value = value;
