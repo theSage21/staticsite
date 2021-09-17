@@ -1,12 +1,5 @@
-<!doctype html>
-<html lang='en'>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Two way data binding</title>
-  </head>
-<body>
+{% extends '.base.html' %}
+{% block content %}
   <h1>Two way data binding</h1>
   <p>
   If we add two numbers X
@@ -14,10 +7,10 @@
   and Y <input data-tie='value:ex.y' />
   the result is <span data-tie='innerHTML:ex.total'></span> and the square of that is <span data-tie='innerHTML:ex.square'></span>.
   </p>
-  <p>You can even bind things to attributes of tags, like the placeholder of this input field<input data-tie='placeholder:ex.equation'/>.</p>
-  <p data-tie='class:ex.visible'>Visibility of elements can also be controlled using computed values. To make this paragraph disappear change the values so that the total is 0.</p>
+  <p>You can even bind things to attributes , like the placeholder of this input field<input data-tie='placeholder:ex.equation'/>.</p>
+  <p data-tie='class:ex.visible'>Visibility of elements can also be controlled using computed values. To make this paragraph disappear change the values of x and y so that the total is 0.</p>
   <script>
-  {% include 'bind.js' %}
+  {% include 'examples/twoWayDataBind/bind.js' %}
   ex = bindToDom('ex', {
       x: 1,
       y: 2,
@@ -37,5 +30,4 @@
     })
   </script>
   <style> .d-none{display: none;} </style>
-</body>
-</html>
+{% endblock %}

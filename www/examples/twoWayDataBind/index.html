@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang='en'>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StaticSite</title>
+    <style>body{
+  font-family: sans-serif;
+}
+.content {
+  margin:40px auto;
+  max-width:650px;
+  line-height:1.6;
+  font-size:18px;
+  color:#444;
+  padding:10px;
+  background-color: #eee;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+h1,h2,h3{line-height:1.2}</style>
+    
+    
+  </head>
+  <body>
+    <div class="topnav">
+      <a href="/">StaticSite</a>
+      <a href="https://github.com/theSage21/staticsite" target='_blank'>Github</a>
+      <a href='#' style='float: right; '></a>
+    </div>
+    <div class='content'>
+    
+  <h1>Two way data binding</h1>
+  <p>
+  If we add two numbers X
+  <input data-tie='value:ex.x' />
+  and Y <input data-tie='value:ex.y' />
+  the result is <span data-tie='innerHTML:ex.total'></span> and the square of that is <span data-tie='innerHTML:ex.square'></span>.
+  </p>
+  <p>You can even bind things to attributes , like the placeholder of this input field<input data-tie='placeholder:ex.equation'/>.</p>
+  <p data-tie='class:ex.visible'>Visibility of elements can also be controlled using computed values. To make this paragraph disappear change the values of x and y so that the total is 0.</p>
+  <script>
+  function getDomUpdateFn(varName, scope){
+  return function (value){
+    const domElements = document.querySelectorAll(`[data-tie*='${scope}.${varName}']`)
+    console.log(domElements, varName, scope)
+    for(var j=0; j < domElements.length; ++j){
+      const ties = (domElements[j].getAttribute('data-tie') || '')
+        .split(' ')
+        .filter(function (tie){
+          return tie != '' && tie.endsWith(`:${scope}.${varName}`)
+        })
+      for(var i=0; i < ties.length; ++i){
+        let [prop, vname] = ties[i].split(':')
+        vname = vname.slice(`${scope}:`.length)
+        switch(prop){
+          case 'value':
+            domElements[j].value = value;
+            break;
+          case 'innerHTML':
+            domElements[j].innerHTML = value;
+            break;
+          default:
+            domElements[j].setAttribute(prop, value)
+        }
+      }
+    }
+  }
+}
+
+function bindToDom(scope, obj){
+  const keys = Object.keys(obj)
+  let access = {}  // add get/set methods here
+  let store = {}  // actually store the information needed
+  let listeners = {}  // to update dependencies when data changes
+  let recordEvents = false
+  let events = []
+  for(var i=0; i < keys.length; ++i){
+    const varName = keys[i]
+    if(typeof(obj[varName]) !== 'function'){
+      // When var is set, update DOM
+      access[varName] = {
+        get: function (){
+          if(recordEvents === true){
+            events.push({op: 'get', key: varName})
+          }
+          return store[varName]
+        },
+        set: function (value){
+          getDomUpdateFn(varName, scope)(value)
+          store[varName] = value
+          const toCall = listeners[varName]
+          if(toCall !== undefined){
+            let fnKeys = Object.keys(toCall)
+            for(j = 0; j < fnKeys.length; ++j){
+              const fk = fnKeys[j]
+              const fn = toCall[fk]
+              obj[fk] = fn(obj)
+            }
+          }
+        },
+      }
+      // set value in store
+      access[varName].set(obj[varName])
+      // When DOM changes, update var by adding event listeners
+      document.addEventListener('change', function(e){
+        if(
+          e.target
+          && (e.target.getAttribute('data-tie') || '').indexOf(`value:${scope}.${varName}`) !== -1
+        ) { obj[varName] = e.target.value }
+      })
+    }  // when key is not function 
+  }  // loop
+  obj = Object.defineProperties(obj, access);
+  // Add events for functions
+  for(i=0; i < keys.length; ++i){
+    const varName = keys[i]
+    if(typeof(obj[varName]) === 'function'){
+      events = []
+      recordEvents = true
+      let initValue = obj[varName](obj)
+      for(j = 0; j < events.length; ++j){
+        const dependency = events[j].key
+        if(!(dependency in listeners)){
+          listeners[dependency] = {}
+        }
+        if(!(varName in listeners[dependency])){
+          listeners[dependency][varName] = obj[varName]
+        }
+      }
+      access[varName] = {
+        get: function (){
+          if(recordEvents === true){
+            events.push({op: 'get', key: varName})
+          }
+          return store[varName] 
+        },
+        set: function (value){
+          getDomUpdateFn(varName, scope)(value)
+          store[varName] = value
+          const toCall = listeners[varName]
+          if(toCall !== undefined){
+            let fnKeys = Object.keys(toCall)
+            for(j = 0; j < fnKeys.length; ++j){
+              const fk = fnKeys[j]
+              const fn = toCall[fk]
+              obj[fk] = fn(obj)
+            }
+          }
+        },
+      }
+      access[varName].set(initValue)
+      obj = Object.defineProperties(obj, access);
+    }  // when key is not function 
+  }  // loop
+  events = []
+  recordEvents = false
+  return obj
+}
+  ex = bindToDom('ex', {
+      x: 1,
+      y: 2,
+      total: function(data){
+        return Number(data.x) + Number(data.y)
+      },
+      square: function(data){
+        return Number(data.total) * Number(data.total)
+      },
+      equation: function(data){
+        return `${data.x} + ${data.y} = ${data.total} ^2 = ${data.square}`
+      },
+      visible: function (data){
+        if(data.total === 0){ return 'd-none' }
+        return ''
+      }
+    })
+  </script>
+  <style> .d-none{display: none;} </style>
+
+    </div>
+    
+  </body>
+</html>

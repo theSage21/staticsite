@@ -1,4 +1,5 @@
 title: PyJaipur
 baseurl: '/staticsite'
+baseurl: ''
 plugins:
     pretty_json: 'staticsite.plugins.pretty_json'

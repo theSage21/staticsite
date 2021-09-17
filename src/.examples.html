@@ -1,5 +1,5 @@
 <h2>Examples</h2>
-<p>See <a href='https://github.com/theSage21/staticsite/tree/master/examples'>examples folder</a> for code regarding these examples and more.</p>
+<p>See <a href='{{ baseurl }}/examples/index.html'>examples folder</a> for ways to do modern things with staticsite.</p>
 
 <h3>Developing the site</h3>
 
@@ -19,15 +19,3 @@ For example the example file contains pretty_json. which renders like:
 <pre>
 {{ plugins.pretty_json(obj) }}
 </pre>
-
-<h3>Two way data binding</h3>
-
-<p>
-If we add two numbers X
-<input data-value='x' />
-and Y <input data-value='y' />
-the result is <span data-text='total'></span> and the square of that is <span data-text='square'></span>.
-</p>
-
-<p>You can use minimal two way data binding along with flat computed dependencies as well! Makes code a lot easier to write.</p>
-

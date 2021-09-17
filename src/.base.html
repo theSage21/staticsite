@@ -9,16 +9,15 @@
     {% block head %}
     {% endblock %}
   </head>
-
-<body>
-  <div class="topnav">
-    <a href="{{ baseurl }}">StaticSite</a>
-    <a href="https://github.com/theSage21/staticsite" target='_blank'>Github</a>
-    <a href='#' style='float: right; '>{{ sitehash }}</a>
-  </div>
-  <div class='content'>
-  {% block content %}{% endblock %}
-  </div>
-  {% include '.autoreload.html' %}
-</body>
+  <body>
+    <div class="topnav">
+      <a href="{{ baseurl or '/' }}">StaticSite</a>
+      <a href="https://github.com/theSage21/staticsite" target='_blank'>Github</a>
+      <a href='#' style='float: right; '>{{ sitehash }}</a>
+    </div>
+    <div class='content'>
+    {% block content %}{% endblock %}
+    </div>
+    {% include '.autoreload.html' %}
+  </body>
 </html>
